@@ -1,4 +1,4 @@
-# catfact-vue-bunthoeun
+# catfact-vuejs-version-bunthoeun
 
 ## Project setup
 ```
