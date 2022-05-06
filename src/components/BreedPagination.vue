@@ -3,7 +3,9 @@
     <button 
       class="btn" 
       :class="link.active ? 'active' : ''"
-      v-for="link in links" @click="change(link)"
+      v-for="link in links" 
+      :key="link.label"
+      @click="change(link)"
       ref="btn"
     >
       {{ 

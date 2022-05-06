@@ -1,76 +1,38 @@
 <template>
   <Navbar :title="title" />
   <main class="container mx-auto p-5">
-    <BreedList :breeds='breeds' :toggleModal="toggleModal" />
-    <BreedPagination :links="links" @change="handleChangeUrl" />
-  </main>
 
-  <teleport to=".modals" v-if="isOpen">
-    <Modal :isOpen="isOpen" @close="toggleModal" />
-  </teleport>
+    <div class="mb-5 flex gap-2 justify-center">
+      <button @click="redirect" class="bg-green-900 text-white px-5 py-2 rounded">Home</button>
+      <button @click="back" class="bg-green-900 text-white px-5 py-2 rounded">Go Back</button>
+      <button @click="forward" class="bg-green-900 text-white px-5 py-2 rounded">Go Forward</button>
+    </div>
+
+    <router-view />
+  </main>
 </template>
 
 <script>
 import Navbar from './components/Navbar.vue'
-import BreedList from './components/BreedList.vue'
-import Modal from './components/Modal.vue'
-import BreedPagination from './components/BreedPagination.vue'
-import { API_URL } from './config'
 
 export default {
   name: 'App',
-  components: { Navbar, BreedList, Modal, BreedPagination },
-  data() {
+  components: { Navbar },
+   data() {
     return {
       title: 'Cat Ninja',
-      breeds: [],
-      links: [],
-      isOpen: false,
-      inc: 1,
     }
   },
-
   methods: {
-    toggleModal() {
-      this.isOpen = !this.isOpen
+    redirect() {
+      this.$router.push({ name: 'Home' })
     },
-
-    handleChangeUrl(link) {
-      link.active = !link.active 
-      if(link.label === '<') {
-        this.inc--
-        link.url = `${API_URL}?page=${this.inc}`
-      }
-
-      if(link.label === '>') {
-        this.inc++
-      } else {
-        this.inc = link.url.split('')[link.url.split('').length - 1]
-      }
-
-      const linkLengthWithoutPrevAndNextBtns = this.links.length - 2;
-      if(this.inc <= 0) this.inc = 1
-      if(this.inc >= linkLengthWithoutPrevAndNextBtns) this.inc = linkLengthWithoutPrevAndNextBtns
-
-      link.url = `${API_URL}?page=${this.inc}`
-
-      fetch(link.url)
-        .then(res => res.json())
-        .then(datas => {
-          this.breeds = datas.data
-        })
-        .catch(err => console.log(err))
+    back() {
+      this.$router.go(-1)
+    },
+    forward() {
+      this.$router.go(1)
     }
-  },
-
-  mounted() {
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(datas => {
-        this.breeds = datas.data
-        this.links = datas.links
-      })
-      .catch(err => console.log(err))
   }
 
   // mounted() { console.log('mounted') },
