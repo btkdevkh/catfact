@@ -1,5 +1,7 @@
 # catfact-vuejs-version-bunthoeun
 
+## Site url: https://catfactninja-vuejs-version.netlify.app/
+
 ## Project setup
 ```
 npm install
