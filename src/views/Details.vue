@@ -1,5 +1,5 @@
 <template>
-  <div class="relative rounded overflow-hidden min-w-80 w-1/2 mx-auto" v-if="breedDetails">
+  <div class="relative rounded overflow-hidden md:w-1/2 w-80 mx-auto" v-if="breedDetails">
     <i class="text-3xl absolute right-2 top-2 fa-solid fa-cat"></i>
     <img :src="foundCatPic && foundCatPic.path ? foundCatPic.path : catgeneric" class="w-full h-52 object-cover" />
     <div class="flex flex-col justify-center text-gray-600 bg-white p-5 shadow-md h-60">
