@@ -1,5 +1,5 @@
 <template>
-  <div class="relative rounded overflow-hidden w-80 mx-auto" v-if="breedDetails">
+  <div class="relative rounded overflow-hidden min-w-80 w-1/2 mx-auto" v-if="breedDetails">
     <i class="text-3xl absolute right-2 top-2 fa-solid fa-cat"></i>
     <img :src="foundCatPic && foundCatPic.path ? foundCatPic.path : catgeneric" class="w-full h-52 object-cover" />
     <div class="flex flex-col justify-center text-gray-600 bg-white p-5 shadow-md h-60">
@@ -27,6 +27,7 @@ export default {
       catPics,
     }
   },
+
   methods: {
     async getAllBreeds() {
       const res1 = await fetch(API_URL)
@@ -45,9 +46,11 @@ export default {
       })
     }
   },
+
   mounted() {
     this.getAllBreeds()    
   },
+
   computed: {
     foundCatPic() {
       if(this.breedDetails) return catPics.find(c => c.breed.toLowerCase() === this.breedDetails.breed.toLowerCase())
