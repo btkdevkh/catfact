@@ -16,20 +16,16 @@
 import { API_URL } from '../config'
 import { catPics } from '../data/catPics'
 import catgeneric from '../assets/img/cats/catgeneric.jpg'
+import { ref } from '@vue/reactivity'
+import { computed } from '@vue/runtime-core'
 
 export default {
   props: ['breed'],
-  data() {
-    return {
-      breeds: [],
-      breedDetails: null,
-      catgeneric,
-      catPics,
-    }
-  },
+  setup ({ breed }) {
+    const breeds = ref([])
+    const breedDetails = ref(null)
 
-  methods: {
-    async getAllBreeds() {
+    const getAllBreeds = async () => {
       const res1 = await fetch(API_URL)
       const data1 = await res1.json()
       const res2 = await fetch(`${API_URL}?page=2`)
@@ -39,22 +35,20 @@ export default {
       const res4 = await fetch(`${API_URL}?page=4`)
       const data4 = await res4.json()
 
-      this.breeds = [...data1.data, ...data2.data, ...data3.data, ...data4.data]
+      breeds.value = [...data1.data, ...data2.data, ...data3.data, ...data4.data]
 
-      this.breedDetails = this.breeds.find(b => {
-        return b.breed.toLowerCase() === this.breed.toLowerCase()
+      breedDetails.value = breeds.value.find(b => {
+        return b.breed.toLowerCase() === breed.toLowerCase()
       })
     }
-  },
 
-  mounted() {
-    this.getAllBreeds()    
-  },
+    getAllBreeds()
 
-  computed: {
-    foundCatPic() {
-      if(this.breedDetails) return catPics.find(c => c.breed.toLowerCase() === this.breedDetails.breed.toLowerCase())
-    }
+    const foundCatPic = computed(() => {
+      if(breedDetails.value) return catPics.find(c => c.breed.toLowerCase() === breedDetails.value.breed.toLowerCase())
+    })
+
+    return { breedDetails, catgeneric, foundCatPic }
   }
 }
 </script>

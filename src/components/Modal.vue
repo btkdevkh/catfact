@@ -7,25 +7,27 @@
 </template>
 
 <script>
+import { ref } from '@vue/reactivity'
 import { API_URL_FACT } from '../config'
+import { watchEffect } from '@vue/runtime-core'
 
 export default {
   props: ['isOpen', 'delay'],
-  data() {
-    return {
-      randomFact: null
+  setup (props, context) {
+    const randomFact = ref(null)
+
+    const closeModal = () => {
+      context.emit('close')
     }
-  },
-  methods: {
-    closeModal() {
-      this.$emit('close')
-    }
-  },
-  mounted() {
-    fetch(API_URL_FACT)
-      .then(res => res.json())
-      .then(data => this.randomFact = data)
-      .catch(err => console.log(err))
+
+    watchEffect(() => {
+      fetch(API_URL_FACT)
+        .then(res => res.json())
+        .then(data => randomFact.value = data)
+        .catch(err => console.log(err))
+    })
+
+    return { randomFact, closeModal }
   }
 }
 </script>

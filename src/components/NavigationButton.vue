@@ -7,17 +7,25 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+
 export default {
-  methods: {
-    redirect() {
-      this.$router.push({ name: 'Home' })
-    },
-    back() {
-      this.$router.go(-1)
-    },
-    forward() {
-      this.$router.go(1)
+  setup () {
+    const router = useRouter()
+
+    const redirect = () => {
+      router.push({ name: 'Home' })
     }
+
+    const back = () => {
+      router.go(-1)
+    }
+    
+    const forward = () => {
+      router.go(1)
+    }
+
+    return { redirect, back, forward }
   }
 }
 </script>

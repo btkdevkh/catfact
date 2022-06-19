@@ -22,15 +22,13 @@
 <script>
 export default {
   props: ['links'],
-  data() {
-    return {
+  setup (props, context) {
+    const change = (link) => {
+      props.links.forEach(el => el.active = false)
+      context.emit('change', link)
     }
-  },
-  methods: {
-    change(link) {
-      this.links.forEach(el => el.active = false)
-      this.$emit('change', link)
-    }
+
+    return { change }
   }
 }
 </script>

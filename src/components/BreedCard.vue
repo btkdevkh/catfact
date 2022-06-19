@@ -15,22 +15,18 @@
 </template>
 
 <script>
+import { computed } from '@vue/runtime-core'
 import catgeneric from '../assets/img/cats/catgeneric.jpg'
 import { catPics } from '../data/catPics'
 
 export default {
   props: ['breed', 'toggleModal'],
-  data() {
-    return {
-      catgeneric,
-      catPics,
-    }
-  },
+  setup ({ breed }) {
+    const foundCatPic = computed(() => {
+      return catPics.find(c => c.breed.toLowerCase() === breed.breed.toLowerCase())
+    })
 
-  computed: {
-    foundCatPic() {
-      return catPics.find(c => c.breed.toLowerCase() === this.breed.breed.toLowerCase())
-    }
+    return { catgeneric, catPics, foundCatPic }
   }
 }
 </script>

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue'
 import BreedList from '../components/BreedList.vue'
 import BreedPagination from '../components/BreedPagination.vue'
 import Modal from '../components/Modal.vue'
@@ -15,56 +16,54 @@ import { API_URL } from '../config'
 export default {
   name: 'Home',
   components: { BreedList, BreedPagination, Modal },
-  data() {
-    return {
-      breeds: [],
-      links: [],
-      isOpen: false,
-      inc: 1,
-    }
-  },
+  setup () {
+    const breeds = ref([]);
+    const links = ref([]);
+    const isOpen = ref(false);
+    const inc = ref(1);
 
-  methods: {
-    toggleModal() {
-      this.isOpen = !this.isOpen
-    },
+    const toggleModal = () => {
+      isOpen.value = !isOpen.value
+    };
 
-    handleChangeUrl(link) {
+    const handleChangeUrl = (link) => {
       link.active = !link.active 
       if(link.label === '<') {
-        this.inc--
-        link.url = `${API_URL}?page=${this.inc}`
+        inc.value--
+        link.url = `${API_URL}?page=${inc.value}`
       }
 
       if(link.label === '>') {
-        this.inc++
+        inc.value++
       } else {
-        this.inc = link.url.split('')[link.url.split('').length - 1]
+        inc.value = link.url.split('')[link.url.split('').length - 1]
       }
 
-      const linkLengthWithoutPrevAndNextBtns = this.links.length - 2;
-      if(this.inc <= 0) this.inc = 1
-      if(this.inc >= linkLengthWithoutPrevAndNextBtns) this.inc = linkLengthWithoutPrevAndNextBtns
+      const linkLengthWithoutPrevAndNextBtns = links.value.length - 2;
+      if(inc.value <= 0) inc.value = 1
+      if(inc.value >= linkLengthWithoutPrevAndNextBtns) inc.value = linkLengthWithoutPrevAndNextBtns
 
-      link.url = `${API_URL}?page=${this.inc}`
+      link.url = `${API_URL}?page=${inc.value}`
 
       fetch(link.url)
         .then(res => res.json())
         .then(datas => {
-          this.breeds = datas.data
+          breeds.value = datas.data
         })
         .catch(err => console.log(err))
-    }
-  },
+    };
 
-  mounted() {
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(datas => {
-        this.breeds = datas.data
-        this.links = datas.links
-      })
-      .catch(err => console.log(err))
+    onMounted(() => {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(datas => {
+          breeds.value = datas.data
+          links.value = datas.links
+        })
+        .catch(err => console.log(err))
+    })
+
+    return { breeds, links, isOpen, toggleModal, handleChangeUrl }
   }
 }
 </script>
